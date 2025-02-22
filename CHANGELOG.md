@@ -1,4 +1,6 @@
-# developing
+# Change Log is deprecated
+
+Please refer to https://github.com/beego/beego/releases to find the CHANGELOG
 
 # v2.1.2
 - [refactor: CONTRIBUTING.md file grammatical improvements](https://github.com/beego/beego/issues/5411)
