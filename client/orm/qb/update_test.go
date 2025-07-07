@@ -119,12 +119,6 @@ func TestUpdater_SetForCombination(t *testing.T) {
 }
 
 func TestUpdater_Set(t *testing.T) {
-	type UserPerson struct {
-		FirstName string
-		Age       *int8
-		LastName  sql.NullString
-	}
-
 	tm := &TestModel{
 		Id:        12,
 		FirstName: "Tom",
@@ -233,7 +227,7 @@ type Person struct {
 }
 
 type User struct {
-	Id int64 `eorm:"auto_increment,primary_key"`
+	Id int64 `orm:"auto_increment,primary_key"`
 	Person
 }
 

@@ -50,43 +50,16 @@ type SimpleStruct struct {
 	Float64    float64
 	Float64Ptr *float64
 
-	// Byte byte
-	// BytePtr *byte
-	//ByteArray []byte
-
 	String string
 
-	// 特殊类型
-	//NullStringPtr *sql.NullString
-	//NullInt16Ptr  *sql.NullInt16
-	//NullInt32Ptr  *sql.NullInt32
-	//NullInt64Ptr  *sql.NullInt64
-	//NullBoolPtr   *sql.NullBool
-	//// NullTimePtr    *sql.NullTime
-	//NullFloat64Ptr *sql.NullFloat64
-	//JsonColumn     *JsonColumn
-
-	NullString sql.NullString
-	NullInt64  sql.NullInt64
-	NullBool   sql.NullBool
-	// NullTimePtr    *sql.NullTime
+	NullString  sql.NullString
+	NullInt64   sql.NullInt64
+	NullBool    sql.NullBool
 	NullFloat64 sql.NullFloat64
-
-	//case sql.NullInt64:
-	//	ft = TypeBigIntegerField
-	//case sql.NullFloat64:
-	//	ft = TypeFloatField
-	//case sql.NullBool:
-	//	ft = TypeBooleanField
-	//case sql.NullString:
-	//	ft = TypeVarCharField
-	//case time.Time:
-	//	ft = TypeDateTimeField
-	//}
 }
 
-// JsonColumn 是自定义的 JSON 类型字段
-// Val 字段必须是结构体指针
+// JsonColumn is a custom JSON type field
+// The Val field must be a struct pointer
 type JsonColumn struct {
 	Val   User
 	Valid bool
@@ -112,7 +85,7 @@ func (j *JsonColumn) Scan(src any) error {
 		}
 		bs = *val
 	default:
-		return fmt.Errorf("不合法类型 %+v", src)
+		return fmt.Errorf("illegal type %+v", src)
 	}
 	if len(bs) == 0 {
 		return nil
@@ -125,7 +98,6 @@ func (j *JsonColumn) Scan(src any) error {
 	return nil
 }
 
-// Value 参考 sql.NullXXX 类型定义的
 func (j *JsonColumn) Value() (driver.Value, error) {
 	if j == nil || !j.Valid {
 		return nil, nil
@@ -166,65 +138,11 @@ func NewSimpleStruct(id uint64) *SimpleStruct {
 		Float32Ptr: ekit.ToPtr[float32](-3.2),
 		Float64:    6.4,
 		Float64Ptr: ekit.ToPtr[float64](-6.4),
-		//ByteArray:      []byte("hello"),
-		String: "world",
-		//NullStringPtr:  &sql.NullString{String: "null string", Valid: true},
-		//NullInt16Ptr:   &sql.NullInt16{Int16: 16, Valid: true},
-		//NullInt32Ptr:   &sql.NullInt32{Int32: 32, Valid: true},
-		//NullInt64Ptr:   &sql.NullInt64{Int64: 64, Valid: true},
-		//NullBoolPtr:    &sql.NullBool{Bool: true, Valid: true},
-		//NullFloat64Ptr: &sql.NullFloat64{Float64: 6.4, Valid: true},
-		//JsonColumn: &JsonColumn{
-		//	Val:   User{Name: "Tom"},
-		//	Valid: true,
-		//},
+		String:     "world",
 
 		NullString:  sql.NullString{String: "null string", Valid: true},
 		NullInt64:   sql.NullInt64{Int64: 64, Valid: true},
 		NullBool:    sql.NullBool{Bool: true, Valid: true},
 		NullFloat64: sql.NullFloat64{Float64: 6.4, Valid: true},
 	}
-}
-
-type BaseEntity struct {
-	CreateTime uint64
-	UpdateTime uint64
-}
-
-type CombinedModel struct {
-	BaseEntity
-	Id        int64 `eorm:"auto_increment,primary_key"`
-	FirstName string
-	Age       int8
-	LastName  *string
-}
-
-func NewCombinedModel(id int64) *CombinedModel {
-	return &CombinedModel{
-		BaseEntity: BaseEntity{
-			CreateTime: 10000,
-			UpdateTime: 10000,
-		},
-		Id:        id,
-		FirstName: "Tom" + fmt.Sprintln(id),
-		Age:       20,
-		LastName:  ekit.ToPtr[string]("Jerry" + fmt.Sprintln(id)),
-	}
-}
-
-type Order struct {
-	Id        int
-	UsingCol1 string
-	UsingCol2 string
-}
-
-type OrderDetail struct {
-	OrderId   int
-	ItemId    int
-	UsingCol1 string
-	UsingCol2 string
-}
-
-type Item struct {
-	Id int
 }

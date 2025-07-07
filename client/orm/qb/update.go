@@ -27,15 +27,13 @@ import (
 // Updater is the builder responsible for building UPDATE query
 type Updater[T any] struct {
 	builder
-	val           valuer2.Value
-	where         []Predicate
-	assigns       []Assignable
-	table         interface{}
-	sess          orm.QueryExecutor
-	registry      *models.ModelCache
-	valCreator    valuer2.Creator
-	ignoreNilVal  bool
-	ignoreZeroVal bool
+	val        valuer2.Value
+	where      []Predicate
+	assigns    []Assignable
+	table      interface{}
+	sess       orm.QueryExecutor
+	registry   *models.ModelCache
+	valCreator valuer2.Creator
 }
 
 func (u *Updater[T]) Build() (*Query, error) {
